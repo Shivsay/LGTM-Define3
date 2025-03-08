@@ -11,16 +11,21 @@ import NotFoundPage from './components/NotFoundPage';
 import AddAircraftPage from './pages/AddAircraftPage';
 import AssignmentList from './pages/AssignmentList';
 import AddFlightPage from './pages/AddFlightPage';
+import CardList from './pages/CardList';
+
 
 function App() {
 
 const addNewAircraft = async (newAircraft) => {
+    const formattedDate = new Date().toISOString().split('T')[0];
+    const formattedDateTime = new Date(newAircraft.flight_datetime).toISOString().replace("T", " ").split(".")[0];
+
     const res = await fetch('http://127.0.0.1:8000/api/put-aircraft/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(newAircraft),
+      body: JSON.stringify({ ...newAircraft,flight_date:formattedDate,flight_datetime:formattedDateTime }),
     });
 
     return;
@@ -41,6 +46,7 @@ const router = createBrowserRouter(
       createRoutesFromElements(
         <Route path='/' element={<MainLayout />}> 
            <Route index element={<Dashboard />} />
+           <Route path='/cardlist' element={<CardList />} />
            <Route path='/aircraftlist' element={<AircraftList />} />
            <Route path='/assignmentlist' element={<AssignmentList />} />
            <Route path='/addaircraft' element={<AddAircraftPage addAircraftSubmit={addNewAircraft}/>} />
