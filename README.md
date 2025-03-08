@@ -1,25 +1,16 @@
 
-# Define 3.0
-The official template repository for Define 3.0
-
-![DefineHack 2025 Logo](https://github.com/user-attachments/assets/8173bc16-418e-4912-b500-c6427e4ba4b6)
-
-
-
-# < Project Name >
+# Airline Assigner
  Cover Image  If applicable
 
 ### Team Information
-- **Team Name**: <Team Name> 
-- **Track**: < Track >
-
+- **Team Name**: LGTM 
+- **Track**: AI in Airlines
 ### Team Members
-| Name | Role | GitHub | LinkedIn |
-|------|------|--------|----------|
-| [Full Name] | [Role] | [@username](https://github.com/username) | [Profile](https://linkedin.com/in/username) |
-| [Full Name] | [Role] | [@username](https://github.com/username) | [Profile](https://linkedin.com/in/username) |
-| [Full Name] | [Role] | [@username](https://github.com/username) | [Profile](https://linkedin.com/in/username) |
-| [Full Name] | [Role] | [@username](https://github.com/username) | [Profile](https://linkedin.com/in/username) |
+| Name               | Role     | GitHub                                   | LinkedIn                                    |
+| ------------------ | -------- | ---------------------------------------- | ------------------------------------------- |
+| Amal S             | LP       | [@username](https://github.com/username) | [Profile](https://linkedin.com/in/username) |
+| Rehan Philip Jacob | Frontend | [@username](https://github.com/username) | [Profile](https://linkedin.com/in/username) |
+| Shiv Sanjay        | Backend  | [@username](https://github.com/username) | [Profile](https://linkedin.com/in/username) |
 
 ## Project Details
 
