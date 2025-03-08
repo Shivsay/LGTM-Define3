@@ -45,7 +45,6 @@ const router = createBrowserRouter(
       createRoutesFromElements(
         <Route path='/' element={<MainLayout />}> 
            <Route index element={<Dashboard />} />
-           <Route path='/cardlist' element={<CardList />} />
            <Route path='/aircraftlist' element={<AircraftList />} />
            <Route path='/assignmentlist' element={<AssignmentList />} />
            <Route path='/addaircraft' element={<AddAircraftPage addAircraftSubmit={addNewAircraft}/>} />
