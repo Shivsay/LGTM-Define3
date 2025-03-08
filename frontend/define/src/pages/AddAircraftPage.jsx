@@ -13,9 +13,9 @@ const AddAircraftPage = ({ addAircraftSubmit }) => {
     e.preventDefault();
 
     const newAircraft = {
-      aircrafttype:aircrafttype,
-      registration: registration,
-      seatingcapacity: seatingcapacity
+      aircraft_type:aircrafttype,
+      aircraft_registration: registration,
+      seating_capacity: seatingcapacity
     };
 
     addAirlineSubmit(newAircraft);

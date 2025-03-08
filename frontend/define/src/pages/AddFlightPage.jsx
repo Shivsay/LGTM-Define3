@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
-
-const AddAssignmentList = () => {
-
-const AddAssignmentPage = ({ addAssignmentSubmit }) => {
+import { useNavigate } from 'react-router-dom';
+const AddFlightPage = ({ addAssignmentSubmit }) => {
   const [flightidentifier, setFlightIdentifier] = useState('');
   const [flightdate, setFlightDate] = useState('');
   const [departurestation, setDepartureStation] = useState('');
@@ -19,7 +17,7 @@ const AddAssignmentPage = ({ addAssignmentSubmit }) => {
   const submitForm = (e) => {
     e.preventDefault();
 
-    const newAssignment = {
+    const newFlight = {
       flightidentifier:flightidentifier,
       flightdate:flightdate,
       departurestation:departurestation,
@@ -32,7 +30,7 @@ const AddAssignmentPage = ({ addAssignmentSubmit }) => {
       flightinformation:flightinformation,
     };
 
-    addAssignmentSubmit(newAssignment);
+    addAssignmentSubmit(newFlight);
 
     // toast.success('Aircraft Added Successfully');
 
@@ -57,7 +55,7 @@ const AddAssignmentPage = ({ addAssignmentSubmit }) => {
                 className='border rounded w-full py-2 px-3 mb-2'
                 placeholder=''
                 required
-                value={identifier}
+                value={flightidentifier}
                 onChange={(e) => setFlightIdentifier(e.target.value)}
               />
             </div>
@@ -74,8 +72,8 @@ const AddAssignmentPage = ({ addAssignmentSubmit }) => {
                 placeholder=''
                 required
                 value={flightdate}
-                onChange={(e) => setDepartureStation(e.target.value)}
-              />
+                onChange={(e) => setDepartureStation(e.target.value)}/>
+                
             </div><div className='mb-4'>
               <label className='block text-gray-700 font-bold mb-2'>
                 Departure Station
@@ -115,19 +113,98 @@ const AddAssignmentPage = ({ addAssignmentSubmit }) => {
               <input
                 type='text'
                 id='arrivalstation'
-                name='arrivalstation'
+                name='arrivalstation' 
                 className='border rounded w-full py-2 px-3 mb-2'
                 placeholder='Company Location'
+                required
+                value={seatingcapacity}
+                onChange={(e) => setArrivalStation(e.target.value)}
+              />
+            </div>
+
+            <div className='mb-4'>
+              <label className='block text-gray-700 font-bold mb-2'>
+                Scheduled Time Of Arrival
+              </label>
+              <input
+                type='text'
+                id='timeofarrival'
+                name='timeofarrival' 
+                className='border rounded w-full py-2 px-3 mb-2'
+                placeholder='Company Location'
+                required
+                value={timeofarrival}
+                onChange={(e) => setTimeOfArrival(e.target.value)}
+              />
+            </div>
+
+             <div className='mb-4'>
+              <label className='block text-gray-700 font-bold mb-2'>
+                Aircraft Type
+              </label>
+              <input
+                type='text'
+                id='aircrafttype'
+                name='aircrafttype' 
+                className='border rounded w-full py-2 px-3 mb-2'
+                placeholder=''
+                required
+                value={timeofarrival}
+                onChange={(e) => setAircraftType(e.target.value)}
+              />
+            </div>
+
+            <div className='mb-4'>
+              <label className='block text-gray-700 font-bold mb-2'>
+                Physical Seating Capacity
+              </label>
+              <input
+                type='text'
+                id='seatingcapacity'
+                name='seatingcapacity' 
+                className='border rounded w-full py-2 px-3 mb-2'
+                placeholder=''
                 required
                 value={seatingcapacity}
                 onChange={(e) => setSeatingCapacity(e.target.value)}
               />
             </div>
+
+            <div className='mb-4'>
+              <label className='block text-gray-700 font-bold mb-2'>
+                Minimum Ground Time
+              </label>
+              <input
+                type='text'
+                id='mingroundtime'
+                name='mingroundtime' 
+                className='border rounded w-full py-2 px-3 mb-2'
+                placeholder=''
+                required
+                value={mingroundtime}
+                onChange={(e) => setMinGroundTime(e.target.value)}
+              />
+            </div>
+            <div className='mb-4'>
+              <label className='block text-gray-700 font-bold mb-2'>
+                Onward Flight Information
+              </label>
+              <input
+                type='text'
+                id='flightinformation'
+                name='flightinformation' 
+                className='border rounded w-full py-2 px-3 mb-2'
+                placeholder=''
+                required
+                value={flightinformation}
+                onChange={(e) => setFlightInformation (e.target.value)}
+              />
+            </div>
+
           </form>
         </div>
       </div>
     </section>
   )
 }
-}
-export default AddAssignmentPage
+export default AddFlightPage;
