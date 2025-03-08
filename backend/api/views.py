@@ -23,13 +23,13 @@ def aircraft_post_view(request):
             if not aircraft_registration or not aircraft_type or seating_capacity is None:
                 return JsonResponse({'error': 'Missing required fields'}, status=400)
 
-            # Process the data (e.g., save to the database)
-            # Example: Create an Aircraft instance (assuming you have an Aircraft model)
-            # Aircraft.objects.create(
-            #     registration=aircraft_registration,
-            #     aircraft_type=aircraft_type,
-            #     seating_capacity=seating_capacity
-            # )
+                
+            aircraft = Aircraft(
+                aircraft_registration=aircraft_registration,
+                aircraft_type=aircraft_type,
+                seating_capacity=seating_capacity
+            )
+            aircraft.save()  
 
             # Return a success response
             return JsonResponse({'message': 'Data received', 'data': {
