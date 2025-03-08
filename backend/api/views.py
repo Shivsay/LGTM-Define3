@@ -13,44 +13,43 @@ from .serializers import AircraftSerializer, FlightSerializer
 
 from django.views.decorators.csrf import csrf_exempt
 
-DB_PATH = 'backend/db.sqlite3'
-SCHEDULE_PATH = 'backend/api/schedule.json'
-TIMESTAMP_PATH = 'backend/api/db_timestamp.txt'
-
-
+DB_PATH = './db.sqlite3'
+SCHEDULE_PATH = './api/schedule.json'
+TIMESTAMP_PATH = './api/db_timestamp.txt'
 
 @csrf_exempt
 def solve_assignment(request):
-    current_timestamp = get_db_last_modified_time(DB_PATH)
-
-    # Check if the timestamp file exists
-    if os.path.exists(TIMESTAMP_PATH):
-        with open(TIMESTAMP_PATH, 'r') as timestamp_file:
-            previous_timestamp = float(timestamp_file.read().strip())
-    else:
-        previous_timestamp = None
-
-    # Check if the database has changed
-    if previous_timestamp == current_timestamp:
-        # Check if the schedule file exists
-        if os.path.exists(SCHEDULE_PATH):
-            with open(SCHEDULE_PATH, 'r') as schedule_file:
-                schedule = json.load(schedule_file)
-            return JsonResponse({'status': 'success', 'assignments': schedule})
-
+    # current_timestamp = get_db_last_modified_time(DB_PATH)
+    # print(current_timestamp)
+    # # Check if the timestamp file exists
+    # if os.path.exists(TIMESTAMP_PATH):
+    #     with open(TIMESTAMP_PATH, 'r') as timestamp_file:
+    #         previous_timestamp = float(timestamp_file.read().strip())
+    # else:
+    #     previous_timestamp = None
+    # print(previous_timestamp)
+    # # Check if the database has changed
+    # if previous_timestamp == current_timestamp:
+    #     # Check if the schedule file exists
+    #     if os.path.exists(SCHEDULE_PATH):
+    #         with open(SCHEDULE_PATH, 'r') as schedule_file:
+    #             schedule = json.load(schedule_file)
+    #         return JsonResponse({'status': 'success', 'assignments': schedule})
+    # print("Solving")
     # Run the solver
     assignments = solve_tail_assignment()
+    print(type(assignments))
     if assignments is None:
         return JsonResponse({'status': 'error', 'message': 'No solution found'}, status=400)
     
     result = [{'aircraft': aircraft, 'schedule': schedule} for aircraft, schedule in assignments.items()]
 
     # Save the new timestamp and schedule
-    with open(TIMESTAMP_PATH, 'w') as timestamp_file:
-        timestamp_file.write(str(current_timestamp))
-    with open(SCHEDULE_PATH, 'w') as schedule_file:
-        json.dump(result, schedule_file)
-
+    # with open(TIMESTAMP_PATH, 'w') as timestamp_file:
+    #     timestamp_file.write(str(current_timestamp))
+    # with open(SCHEDULE_PATH, 'w') as schedule_file:
+    #     json.dump(result, schedule_file)
+    print(result)
     return JsonResponse({'status': 'success', 'assignments': result})
 
 def example_view(request):
