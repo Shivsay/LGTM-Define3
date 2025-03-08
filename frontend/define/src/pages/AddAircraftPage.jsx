@@ -42,6 +42,7 @@ const AddAircraftPage = ({ addAircraftSubmit }) => {
                 name='registration'
                 className='border rounded w-full py-2 px-3 mb-2'
                 placeholder=''
+                autoComplete="off"
                 required
                 value={registration}
                 onChange={(e) => setRegistration(e.target.value)}
@@ -56,6 +57,7 @@ const AddAircraftPage = ({ addAircraftSubmit }) => {
                 type='text'
                 id='aircrafttype'
                 name='aircrafttype'
+                autoComplete="off"
                 className='border rounded w-full py-2 px-3 mb-2'
                 placeholder=''
                 required
@@ -71,6 +73,7 @@ const AddAircraftPage = ({ addAircraftSubmit }) => {
               <input
                 type='text'
                 id='seatingcapacity'
+                autoComplete="off"
                 name='seatingcapacity'
                 className='border rounded w-full py-2 px-3 mb-2'
                 placeholder=''

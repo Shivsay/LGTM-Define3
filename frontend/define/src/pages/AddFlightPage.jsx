@@ -56,6 +56,7 @@ const AddFlightPage = ({ addFlightSubmit }) => {
                 className='border rounded w-full py-2 px-3 mb-2'
                 placeholder=''
                 required
+                autoComplete="off"
                 value={flightidentifier}
                 onChange={(e) => setFlightIdentifier(e.target.value)}
               />
@@ -72,8 +73,9 @@ const AddFlightPage = ({ addFlightSubmit }) => {
                 className='border rounded w-full py-2 px-3 mb-2'
                 placeholder=''
                 required
+                autoComplete="off"
                 value={flightdate}
-                onChange={(e) => setDepartureStation(e.target.value)}/>
+                onChange={(e) => setFlightDate(e.target.value)}/>
                 
             </div><div className='mb-4'>
               <label className='block text-gray-700 font-bold mb-2'>
@@ -86,6 +88,7 @@ const AddFlightPage = ({ addFlightSubmit }) => {
                 className='border rounded w-full py-2 px-3 mb-2'
                 placeholder=''
                 required
+                autoComplete="off"
                 value={departurestation}
                 onChange={(e) => setDepartureStation(e.target.value)}
               />
@@ -101,6 +104,7 @@ const AddFlightPage = ({ addFlightSubmit }) => {
                 name='timeofdeparture'
                 className='border rounded w-full py-2 px-3 mb-2'
                 placeholder=''
+                autoComplete="off"
                 required
                 value={timeofdeparture}
                 onChange={(e) => setTimeOfDeparture(e.target.value)}
@@ -117,8 +121,9 @@ const AddFlightPage = ({ addFlightSubmit }) => {
                 name='arrivalstation' 
                 className='border rounded w-full py-2 px-3 mb-2'
                 placeholder=''
+                autoComplete="off"
                 required
-                value={seatingcapacity}
+                value={arrivalstation}
                 onChange={(e) => setArrivalStation(e.target.value)}
               />
             </div>
@@ -131,6 +136,7 @@ const AddFlightPage = ({ addFlightSubmit }) => {
                 type='text'
                 id='timeofarrival'
                 name='timeofarrival' 
+                autoComplete='off'
                 className='border rounded w-full py-2 px-3 mb-2'
                 placeholder=''
                 required
@@ -146,11 +152,12 @@ const AddFlightPage = ({ addFlightSubmit }) => {
               <input
                 type='text'
                 id='aircrafttype'
+                autoComplete='off'
                 name='aircrafttype' 
                 className='border rounded w-full py-2 px-3 mb-2'
                 placeholder=''
                 required
-                value={timeofarrival}
+                value={aircrafttype}
                 onChange={(e) => setAircraftType(e.target.value)}
               />
             </div>
@@ -160,10 +167,11 @@ const AddFlightPage = ({ addFlightSubmit }) => {
                 Physical Seating Capacity
               </label>
               <input
-                type='text'
+                type='number'
                 id='seatingcapacity'
                 name='seatingcapacity' 
                 className='border rounded w-full py-2 px-3 mb-2'
+                autoComplete='off'
                 placeholder=''
                 required
                 value={seatingcapacity}
@@ -176,9 +184,10 @@ const AddFlightPage = ({ addFlightSubmit }) => {
                 Minimum Ground Time
               </label>
               <input
-                type='text'
+                type='number'
                 id='mingroundtime'
                 name='mingroundtime' 
+                autoComplete='off'
                 className='border rounded w-full py-2 px-3 mb-2'
                 placeholder=''
                 required
@@ -186,7 +195,7 @@ const AddFlightPage = ({ addFlightSubmit }) => {
                 onChange={(e) => setMinGroundTime(e.target.value)}
               />
             </div>
-            <div className='mb-4'>
+            {/* <div className='mb-4'>
               <label className='block text-gray-700 font-bold mb-2'>
                 Onward Flight Information
               </label>
@@ -200,7 +209,7 @@ const AddFlightPage = ({ addFlightSubmit }) => {
                 value={onwardflightinformation}
                 onChange={(e) => setFlightInformation (e.target.value)}
               />
-            </div>
+            </div> */}
             <div>
               <button
                 className='bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline'
