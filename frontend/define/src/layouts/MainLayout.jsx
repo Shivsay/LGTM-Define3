@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router-dom';
 // import NavBar from '../components/NavBar';
-import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from "@/components/ui/navigation-menu";
+// import { NavigationMenu, NavigationMenuItem, NavigationMenuList } from "@/components/ui/navigation-menu";
 import NavBar from '../components/NavBar';
 import Footer from '../components/Footer';
 import {
