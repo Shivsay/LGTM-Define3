@@ -1,0 +1,42 @@
+[Document]
+Title = Tail Assignment Optimization Problem Statement
+Date = 20-06-2011
+Copyright = © 2025 by IBS Software Services (P) Ltd
+
+[Section 1]
+Title = Tail Assignment Optimization – Problem Description
+
+[Subsection 1.1]
+Title = Basic Tail Assignment Problem
+Description = The tails assignment problem deals with assignment of flight schedules (flight legs) to individual aircraft tails. The flights should be assigned taking into consideration the constraints specified and should produce a schedule which assigns all scheduled flights.
+
+[Entities]
+Aircrafts = 
+    - Aircraft Registration: Unique Identifier for Aircraft
+    - Aircraft Type: Specifies the aircraft family
+    - Seating capacity: Different aircrafts can have different capacity depending on how the airline configures it
+
+Flights = 
+    - Flight Identifier: An Alpha numeric code used to identify a flight
+    - Flight Date: Date on which the flight is planned to be operated
+    - Departure Station: The airport at which the aircraft operating the flight is scheduled to depart
+    - Scheduled Time of Departure: The departure time of the flight
+    - Arrival Station: The airport at which the flight is scheduled to arrive
+    - Scheduled Time of Arrival: The arrival time of the flight
+    - Aircraft Type: The type of the aircraft on which the flight should operate
+    - Physical Seating capacity: The seating capacity which is required on the aircraft
+    - Minimum Ground Time: The minimum time the aircraft should be available at the departure station before the flight’s departure
+    - Onward Flight Information: The next flight which should be operated by aircraft as per original schedule from planning department
+
+[Assignment Logic]
+Description = The basic tail assignment logic is to assign the flights to a matching aircraft. The aircraft is matched using the following information:
+    - Aircraft Subtype: The Subtype planned for the flight should match the subtype of the aircraft
+    - Seating information: The next level of matching is using seating configuration. The system shall need to filter down the aircrafts that matches with the seating configuration within the subtype.
+    - Pre-assignments: Ensure no pre-assignments (e.g., maintenance events) are being violated.
+
+[General Features]
+1. The system shall allow users to select the aircraft subtype for which assignment needs to be done.
+2. The system shall allow the users to specify the period for which assignment needs to be done.
+3. The system shall allow the users to specify if the pre-assignments need to be respected.
+4. The system shall allow users to specify if certain aircrafts within the selected subtype do not need to be used in the allocation.
+5. The system shall allow users to specify if the trip needs to be maintained in the same aircraft or can be broken.
