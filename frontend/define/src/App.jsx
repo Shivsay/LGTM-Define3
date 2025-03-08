@@ -44,7 +44,7 @@ const addNewAircraft = async (newAircraft) => {
 const router = createBrowserRouter(
       createRoutesFromElements(
         <Route path='/' element={<MainLayout />}> 
-           <Route index element={<Dashboard />} />
+           <Route path='dashboard' element={<Dashboard />} />
            <Route path='/aircraftlist' element={<AircraftList />} />
            <Route path='/assignmentlist' element={<AssignmentList />} />
            <Route path='/addaircraft' element={<AddAircraftPage addAircraftSubmit={addNewAircraft}/>} />
