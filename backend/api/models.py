@@ -5,3 +5,4 @@ from django.db import models
 from .sql_models.aircraft import Aircraft
 from .sql_models.assignment import Assignment
 from .sql_models.flight import Flight
+from .sql_models.preassignment import PreAssignment

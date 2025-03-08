@@ -19,8 +19,6 @@ class Flight(models.Model):
     )
 
     class Meta:
-        # Although flight_identifier is set as primary key, we might need to consider
-        # a composite key of flight_identifier and flight_date in a real-world scenario
         constraints = [
             models.UniqueConstraint(
                 fields=['flight_identifier', 'flight_date'], 
