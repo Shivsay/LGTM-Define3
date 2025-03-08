@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-const AddFlightPage = ({ addAssignmentSubmit }) => {
+const AddFlightPage = ({ addFlightSubmit }) => {
   const [flightidentifier, setFlightIdentifier] = useState('');
   const [flightdate, setFlightDate] = useState('');
   const [departurestation, setDepartureStation] = useState('');
@@ -10,6 +10,7 @@ const AddFlightPage = ({ addAssignmentSubmit }) => {
   const [aircrafttype, setAircraftType] = useState('');
   const [seatingcapacity, setSeatingCapacity] = useState('');
   const [mingroundtime, setMinGroundTime] = useState('');
+  const [onwardflightinformation, setOnwardFlightInformation] = useState('');
 
 
   const navigate = useNavigate();
@@ -18,16 +19,16 @@ const AddFlightPage = ({ addAssignmentSubmit }) => {
     e.preventDefault();
 
     const newFlight = {
-      flightidentifier:flightidentifier,
-      flightdate:flightdate,
-      departurestation:departurestation,
-      timeofdeparture:timeofdeparture,
-      arrivalstation:arrivalstation,
-      timeofarrival:timeofarrival,
-      aircrafttype:aircrafttype,
-      seatingcapacity:seatingcapacity,
-      mingroundtime:mingroundtime,
-      flightinformation:flightinformation,
+      flight_identifier:flightidentifier,
+      flight_date:flightdate,
+      departure_station:departurestation,
+      scheduled_time_of_departure:timeofdeparture,
+      arrival_station:arrivalstation,
+      time_of_arrival:timeofarrival,
+      aircraft_type:aircrafttype,
+      seating_capacity:seatingcapacity,
+      minimum_ground_time:mingroundtime,
+      onward_flight_information:onwardflightinformation,
     };
 
     addAssignmentSubmit(newFlight);
@@ -77,7 +78,7 @@ const AddFlightPage = ({ addAssignmentSubmit }) => {
             </div><div className='mb-4'>
               <label className='block text-gray-700 font-bold mb-2'>
                 Departure Station
-              </label>
+              </label>  
               <input
                 type='text'
                 id='depaturestation'
@@ -115,7 +116,7 @@ const AddFlightPage = ({ addAssignmentSubmit }) => {
                 id='arrivalstation'
                 name='arrivalstation' 
                 className='border rounded w-full py-2 px-3 mb-2'
-                placeholder='Company Location'
+                placeholder=''
                 required
                 value={seatingcapacity}
                 onChange={(e) => setArrivalStation(e.target.value)}
@@ -131,7 +132,7 @@ const AddFlightPage = ({ addAssignmentSubmit }) => {
                 id='timeofarrival'
                 name='timeofarrival' 
                 className='border rounded w-full py-2 px-3 mb-2'
-                placeholder='Company Location'
+                placeholder=''
                 required
                 value={timeofarrival}
                 onChange={(e) => setTimeOfArrival(e.target.value)}
@@ -191,15 +192,22 @@ const AddFlightPage = ({ addAssignmentSubmit }) => {
               </label>
               <input
                 type='text'
-                id='flightinformation'
-                name='flightinformation' 
+                id='onwardflightinformation'
+                name='onwardflightinformation' 
                 className='border rounded w-full py-2 px-3 mb-2'
                 placeholder=''
                 required
-                value={flightinformation}
+                value={onwardflightinformation}
                 onChange={(e) => setFlightInformation (e.target.value)}
               />
             </div>
+            <div>
+              <button
+                className='bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline'
+                type='submit'>
+                Add Flight
+              </button>
+            </div> 
 
           </form>
         </div>

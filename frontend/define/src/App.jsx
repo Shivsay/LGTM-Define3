@@ -14,13 +14,24 @@ import AddFlightPage from './pages/AddFlightPage';
 
 function App() {
 
-const addNew = async (newJob) => {
-    const res = await fetch('/api/jobs', {
+const addNewAircraft = async (newAircraft) => {
+    const res = await fetch('/api/put-aircraft', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(newJob),
+      body: JSON.stringify(newAircraft),
+    });
+    return;
+  };
+
+  const addNewFlight = async (newFlight) => {
+    const res = await fetch('/api/put-flight', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newFlight),
     });
     return;
   };
@@ -31,8 +42,8 @@ const router = createBrowserRouter(
            <Route index element={<Dashboard />} />
            <Route path='/aircraftlist' element={<AircraftList />} />
            <Route path='/assignmentlist' element={<AssignmentList />} />
-           <Route path='/addaircraft' element={<AddAircraftPage addAircraftSubmit={addNew}/>} />
-           <Route path='/addflight' element={<AddFlightPage />} />
+           <Route path='/addaircraft' element={<AddAircraftPage addAircraftSubmit={addNewAircraft}/>} />
+           <Route path='/addflight' element={<AddFlightPage addFlightSubmit={addNewFlight}/>} />
            <Route path='*' element={<NotFoundPage />} />
         </Route>
       )

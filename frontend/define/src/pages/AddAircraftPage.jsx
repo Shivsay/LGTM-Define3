@@ -73,12 +73,19 @@ const AddAircraftPage = ({ addAircraftSubmit }) => {
                 id='seatingcapacity'
                 name='seatingcapacity'
                 className='border rounded w-full py-2 px-3 mb-2'
-                placeholder='Company Location'
+                placeholder=''
                 required
                 value={seatingcapacity}
                 onChange={(e) => setLocation(e.target.value)}
               />
             </div>
+           <div>
+              <button
+                className='bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline'
+                type='submit'>
+                Add Aircraft
+              </button>
+            </div> 
           </form>
         </div>
       </div>
