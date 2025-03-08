@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from .models import Aircraft
+from .models import Flight
 from .solver import solve_tail_assignment
 from .utils import get_db_last_modified_time
 import json
@@ -16,8 +17,7 @@ DB_PATH = 'backend/db.sqlite3'
 SCHEDULE_PATH = 'backend/api/schedule.json'
 TIMESTAMP_PATH = 'backend/api/db_timestamp.txt'
 
-def example_view(request):
-    return HttpResponse("Hello, world. You're at the index.")
+
 
 def solve_assignment(request):
     current_timestamp = get_db_last_modified_time(DB_PATH)
@@ -52,8 +52,12 @@ def solve_assignment(request):
 
     return JsonResponse({'status': 'success', 'assignments': result})
 
+def example_view(request):
+    return HttpResponse("Hello, world. You're at the index.")
+
+
 @csrf_exempt
-def aircraft_post_view(request):
+def aircraft_post(request):
     if request.method == 'POST':
         try:
             # Load the JSON data from the request body
@@ -80,6 +84,66 @@ def aircraft_post_view(request):
                 'aircraft_registration': aircraft_registration,
                 'aircraft_type': aircraft_type,
                 'seating_capacity': seating_capacity
+            }}, status=201)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            # Log the exception (optional)
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+@csrf_exempt
+def flight_post(request):
+    if request.method == 'POST':
+        try:
+            # Load the JSON data from the request body
+            data = json.loads(request.body)
+
+            # Validate required fields
+            flight_identifier = data.get('flight_identifier')
+            flight_date = data.get('flight_date')
+            departure_station = data.get('departure_station')
+            scheduled_time_of_departure = data.get('scheduled_time_of_departure')
+            arrival_station = data.get('arrival_station')
+            scheduled_time_of_arrival = data.get('scheduled_time_of_arrival')
+            aircraft_type = data.get('aircraft_type')
+            physical_seating_capacity = data.get('physical_seating_capacity')
+            minimum_ground_time = data.get('minimum_ground_time')
+            onward_flight = data.get('onward_flight')  # This can be a flight_identifier or None
+
+            # Check for required fields
+            if not flight_identifier or not flight_date or not departure_station or not scheduled_time_of_departure or not arrival_station or not scheduled_time_of_arrival or not aircraft_type or physical_seating_capacity is None or minimum_ground_time is None:
+                return JsonResponse({'error': 'Missing required fields'}, status=400)
+
+            # Create the Flight instance
+            flight = Flight(
+                flight_identifier=flight_identifier,
+                flight_date=flight_date,
+                departure_station=departure_station,
+                scheduled_time_of_departure=scheduled_time_of_departure,
+                arrival_station=arrival_station,
+                scheduled_time_of_arrival=scheduled_time_of_arrival,
+                aircraft_type=aircraft_type,
+                physical_seating_capacity=physical_seating_capacity,
+                minimum_ground_time=minimum_ground_time,
+                onward_flight=onward_flight  # This should be handled appropriately
+            )
+            flight.save()  # Save the Flight instance to the database
+
+            # Return a success response
+            return JsonResponse({'message': 'Flight created successfully', 'data': {
+                'flight_identifier': flight_identifier,
+                'flight_date': flight_date,
+                'departure_station': departure_station,
+                'scheduled_time_of_departure': scheduled_time_of_departure,
+                'arrival_station': arrival_station,
+                'scheduled_time_of_arrival': scheduled_time_of_arrival,
+                'aircraft_type': aircraft_type,
+                'physical_seating_capacity': physical_seating_capacity,
+                'minimum_ground_time': minimum_ground_time,
+                'onward_flight': onward_flight
             }}, status=201)
 
         except json.JSONDecodeError:
