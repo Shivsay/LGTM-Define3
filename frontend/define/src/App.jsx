@@ -10,9 +10,20 @@ import AircraftList from './pages/AircraftList';
 import NotFoundPage from './components/NotFoundPage';
 import AddAircraftPage from './pages/AddAircraftPage';
 import AssignmentList from './pages/AssignmentList';
+import AddFlightPage from './pages/AddFlightPage';
 
 function App() {
-  const [count, setCount] = useState(0)
+
+const addNew = async (newJob) => {
+    const res = await fetch('/api/jobs', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newJob),
+    });
+    return;
+  };
 
 const router = createBrowserRouter(
       createRoutesFromElements(
@@ -20,22 +31,9 @@ const router = createBrowserRouter(
            <Route index element={<Dashboard />} />
            <Route path='/aircraftlist' element={<AircraftList />} />
            <Route path='/assignmentlist' element={<AssignmentList />} />
-           <Route path='/addaircraft' element={<AddAircraftPage />} />
+           <Route path='/addaircraft' element={<AddAircraftPage addAircraftSubmit={addNew}/>} />
+           <Route path='/addflight' element={<AddFlightPage />} />
            <Route path='*' element={<NotFoundPage />} />
-
-{/* 
-          <Route path='/' element={<AddJobPage addJobSubmit={addJob} />} />
-          <Route
-            path='/edit-job/:id'
-            element={<EditJobPage updateJobSubmit={updateJob} />}
-            loader={jobLoader}
-          />
-          <Route
-            path='/jobs/:id'
-            element={<JobPage deleteJob={deleteJob} />}
-            loader={jobLoader}
-          /> */}
-            
         </Route>
       )
     );
