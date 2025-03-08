@@ -19,6 +19,7 @@ TIMESTAMP_PATH = 'backend/api/db_timestamp.txt'
 def example_view(request):
     return HttpResponse("Hello, world. You're at the index.")
 
+@csrf_exempt
 def solve_assignment(request):
     current_timestamp = get_db_last_modified_time(DB_PATH)
 
