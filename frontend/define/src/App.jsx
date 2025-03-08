@@ -11,7 +11,6 @@ import NotFoundPage from './components/NotFoundPage';
 import AddAircraftPage from './pages/AddAircraftPage';
 import AssignmentList from './pages/AssignmentList';
 import AddFlightPage from './pages/AddFlightPage';
-import CardList from './pages/CardList';
 
 
 function App() {
