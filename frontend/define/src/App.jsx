@@ -8,7 +8,8 @@ import MainLayout from './layouts/MainLayout';
 import Dashboard from './pages/Dashboard';
 import AircraftList from './pages/AircraftList';
 import NotFoundPage from './components/NotFoundPage';
-import AddAircraft from './pages/AddAircraft';
+import AddAircraftPage from './pages/AddAircraftPage';
+import AssignmentList from './pages/AssignmentList';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -18,8 +19,8 @@ const router = createBrowserRouter(
         <Route path='/' element={<MainLayout />}> 
            <Route index element={<Dashboard />} />
            <Route path='/aircraftlist' element={<AircraftList />} />
-           <Route path='/assignmentlist' element={<AircraftList />} />
-           <Route path='/addaircraft' element={<AddAircraft />} />
+           <Route path='/assignmentlist' element={<AssignmentList />} />
+           <Route path='/addaircraft' element={<AddAircraftPage />} />
            <Route path='*' element={<NotFoundPage />} />
 
 {/* 
