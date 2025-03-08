@@ -15,13 +15,14 @@ import AddFlightPage from './pages/AddFlightPage';
 function App() {
 
 const addNewAircraft = async (newAircraft) => {
-    const res = await fetch('/api/put-aircraft', {
+    const res = await fetch('http://127.0.0.1:8000/api/put-aircraft/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(newAircraft),
     });
+
     return;
   };
 
