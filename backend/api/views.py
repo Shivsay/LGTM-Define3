@@ -9,7 +9,7 @@ import os
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import AircraftSerializer
+from .serializers import AircraftSerializer, FlightSerializer
 
 from django.views.decorators.csrf import csrf_exempt
 
@@ -60,10 +60,8 @@ def example_view(request):
 def aircraft_post(request):
     if request.method == 'POST':
         try:
-            # Load the JSON data from the request body
             data = json.loads(request.body)
 
-            # Validate required fields
             aircraft_registration = data.get('aircraft_registration')
             aircraft_type = data.get('aircraft_type')
             seating_capacity = data.get('seating_capacity')
@@ -79,7 +77,6 @@ def aircraft_post(request):
             )
             aircraft.save()  
 
-            # Return a success response
             return JsonResponse({'message': 'Data received', 'data': {
                 'aircraft_registration': aircraft_registration,
                 'aircraft_type': aircraft_type,
@@ -89,7 +86,6 @@ def aircraft_post(request):
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
         except Exception as e:
-            # Log the exception (optional)
             return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
@@ -98,10 +94,8 @@ def aircraft_post(request):
 def flight_post(request):
     if request.method == 'POST':
         try:
-            # Load the JSON data from the request body
             data = json.loads(request.body)
 
-            # Validate required fields
             flight_identifier = data.get('flight_identifier')
             flight_date = data.get('flight_date')
             departure_station = data.get('departure_station')
@@ -111,13 +105,11 @@ def flight_post(request):
             aircraft_type = data.get('aircraft_type')
             physical_seating_capacity = data.get('physical_seating_capacity')
             minimum_ground_time = data.get('minimum_ground_time')
-            onward_flight = data.get('onward_flight')  # This can be a flight_identifier or None
+            onward_flight = data.get('onward_flight')
 
-            # Check for required fields
             if not flight_identifier or not flight_date or not departure_station or not scheduled_time_of_departure or not arrival_station or not scheduled_time_of_arrival or not aircraft_type or physical_seating_capacity is None or minimum_ground_time is None:
                 return JsonResponse({'error': 'Missing required fields'}, status=400)
 
-            # Create the Flight instance
             flight = Flight(
                 flight_identifier=flight_identifier,
                 flight_date=flight_date,
@@ -128,11 +120,10 @@ def flight_post(request):
                 aircraft_type=aircraft_type,
                 physical_seating_capacity=physical_seating_capacity,
                 minimum_ground_time=minimum_ground_time,
-                onward_flight=onward_flight  # This should be handled appropriately
+                onward_flight=onward_flight  #can be null/should be null
             )
-            flight.save()  # Save the Flight instance to the database
+            flight.save()
 
-            # Return a success response
             return JsonResponse({'message': 'Flight created successfully', 'data': {
                 'flight_identifier': flight_identifier,
                 'flight_date': flight_date,
@@ -149,13 +140,19 @@ def flight_post(request):
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON'}, status=400)
         except Exception as e:
-            # Log the exception (optional)
             return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 def aircraft_list(request):
-    aircrafts = Aircraft.objects.all()  # Fetch all aircraft records
-    serializer = AircraftSerializer(aircrafts, many=True)  # Serialize the data
+    aircrafts = Aircraft.objects.all()
+    serializer = AircraftSerializer(aircrafts, many=True)
     print(serializer.data)
-    #return Response(serializer.data)  # Return the serialized data as a JSON response
+    #return Response(serializer.data)
+
+def flight_list(request):
+    flights = Flight.objects.all()
+    serializer = FlightSerializer(flights, many=True)
+    print(serializer.data)
+    #return Response(serializer.data) 
+
