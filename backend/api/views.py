@@ -6,6 +6,10 @@ from .utils import get_db_last_modified_time
 import json
 import os
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import AircraftSerializer
+
 from django.views.decorators.csrf import csrf_exempt
 
 DB_PATH = 'backend/db.sqlite3'
@@ -13,7 +17,7 @@ SCHEDULE_PATH = 'backend/api/schedule.json'
 TIMESTAMP_PATH = 'backend/api/db_timestamp.txt'
 
 def example_view(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+    return HttpResponse("Hello, world. You're at the index.")
 
 def solve_assignment(request):
     current_timestamp = get_db_last_modified_time(DB_PATH)
@@ -85,3 +89,9 @@ def aircraft_post_view(request):
             return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+def aircraft_list(request):
+    aircrafts = Aircraft.objects.all()  # Fetch all aircraft records
+    serializer = AircraftSerializer(aircrafts, many=True)  # Serialize the data
+    print(serializer.data)
+    #return Response(serializer.data)  # Return the serialized data as a JSON response
