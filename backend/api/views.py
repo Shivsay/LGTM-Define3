@@ -1,12 +1,21 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from .models import Aircraft
+from .solver import solve_tail_assignment
 import json
 
 from django.views.decorators.csrf import csrf_exempt
 
 def example_view(request):
     return HttpResponse("Hello, world. You're at the polls index.")
+
+def solve_assignment(request):
+    assignments = solve_tail_assignment()
+    if assignments is None:
+        return JsonResponse({'status': 'error', 'message': 'No solution found'}, status=400)
+    
+    result = [{'flight': str(flight), 'aircraft': str(aircraft)} for flight, aircraft in assignments]
+    return JsonResponse({'status': 'success', 'assignments': result})
 
 @csrf_exempt
 def aircraft_post_view(request):
