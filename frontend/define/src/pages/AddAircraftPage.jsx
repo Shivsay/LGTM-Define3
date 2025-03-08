@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// import { toast } from 'react-toastify';
+//import { toast } from 'react-toastify';
 
 const AddAircraftPage = ({ addAircraftSubmit }) => {
   const [registration, setRegistration] = useState('');
@@ -18,7 +18,7 @@ const AddAircraftPage = ({ addAircraftSubmit }) => {
       seatingcapacity: seatingcapacity
     };
 
-    addAircraftSubmit(newAircraft);
+    addAirlineSubmit(newAircraft);
 
     // toast.success('Aircraft Added Successfully');
 
@@ -50,6 +50,7 @@ const AddAircraftPage = ({ addAircraftSubmit }) => {
 
              <div className='mb-4'>
               <label className='block text-gray-700 font-bold mb-2'>
+                Aircraft Type
               </label>
               <input
                 type='text'
@@ -75,7 +76,7 @@ const AddAircraftPage = ({ addAircraftSubmit }) => {
                 placeholder='Company Location'
                 required
                 value={seatingcapacity}
-                onChange={(e) => setSeatingCapacity(e.target.value)}
+                onChange={(e) => setLocation(e.target.value)}
               />
             </div>
           </form>

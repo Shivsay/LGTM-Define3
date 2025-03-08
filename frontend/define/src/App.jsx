@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import AircraftList from './pages/AircraftList';
 import NotFoundPage from './components/NotFoundPage';
 import AddAircraftPage from './pages/AddAircraftPage';
+import AssignmentList from './pages/AssignmentList';
 
 function App() {
   const [count, setCount] = useState(0)
