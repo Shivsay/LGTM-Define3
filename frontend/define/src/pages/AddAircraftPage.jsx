@@ -76,7 +76,7 @@ const AddAircraftPage = ({ addAircraftSubmit }) => {
                 placeholder=''
                 required
                 value={seatingcapacity}
-                onChange={(e) => setLocation(e.target.value)}
+                onChange={(e) => setSeatingCapacity(e.target.value)}
               />
             </div>
            <div>
