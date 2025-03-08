@@ -2,19 +2,50 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from .models import Aircraft
 from .solver import solve_tail_assignment
+from .utils import get_db_last_modified_time
 import json
+import os
 
 from django.views.decorators.csrf import csrf_exempt
+
+DB_PATH = 'backend/db.sqlite3'
+SCHEDULE_PATH = 'backend/api/schedule.json'
+TIMESTAMP_PATH = 'backend/api/db_timestamp.txt'
 
 def example_view(request):
     return HttpResponse("Hello, world. You're at the polls index.")
 
 def solve_assignment(request):
+    current_timestamp = get_db_last_modified_time(DB_PATH)
+
+    # Check if the timestamp file exists
+    if os.path.exists(TIMESTAMP_PATH):
+        with open(TIMESTAMP_PATH, 'r') as timestamp_file:
+            previous_timestamp = float(timestamp_file.read().strip())
+    else:
+        previous_timestamp = None
+
+    # Check if the database has changed
+    if previous_timestamp == current_timestamp:
+        # Check if the schedule file exists
+        if os.path.exists(SCHEDULE_PATH):
+            with open(SCHEDULE_PATH, 'r') as schedule_file:
+                schedule = json.load(schedule_file)
+            return JsonResponse({'status': 'success', 'assignments': schedule})
+
+    # Run the solver
     assignments = solve_tail_assignment()
     if assignments is None:
         return JsonResponse({'status': 'error', 'message': 'No solution found'}, status=400)
     
-    result = [{'flight': str(flight), 'aircraft': str(aircraft)} for flight, aircraft in assignments]
+    result = [{'aircraft': aircraft, 'schedule': schedule} for aircraft, schedule in assignments.items()]
+
+    # Save the new timestamp and schedule
+    with open(TIMESTAMP_PATH, 'w') as timestamp_file:
+        timestamp_file.write(str(current_timestamp))
+    with open(SCHEDULE_PATH, 'w') as schedule_file:
+        json.dump(result, schedule_file)
+
     return JsonResponse({'status': 'success', 'assignments': result})
 
 @csrf_exempt

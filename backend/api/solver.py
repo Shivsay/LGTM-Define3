@@ -1,5 +1,6 @@
 from ortools.linear_solver import pywraplp
 from .models import Aircraft, Flight, PreAssignment
+import datetime
 
 def solve_tail_assignment():
     # Create the solver
@@ -39,11 +40,28 @@ def solve_tail_assignment():
     status = solver.Solve()
 
     if status == pywraplp.Solver.OPTIMAL:
-        assignments = []
-        for flight in flights:
-            for aircraft in aircrafts:
+        assignments = {}
+        for aircraft in aircrafts:
+            assignments[aircraft.aircraft_registration] = []
+            for flight in flights:
                 if x[(flight.id, aircraft.id)].solution_value() == 1:
-                    assignments.append((flight, aircraft))
+                    assignments[aircraft.aircraft_registration].append({
+                        'type': 'flight',
+                        'flight_identifier': flight.flight_identifier,
+                        'start_time': flight.scheduled_time_of_departure,
+                        'end_time': flight.scheduled_time_of_arrival,
+                        'departure_station': flight.departure_station,
+                        'arrival_station': flight.arrival_station
+                    })
+            for preassignment in preassignments:
+                if preassignment.aircraft == aircraft:
+                    assignments[aircraft.aircraft_registration].append({
+                        'type': 'preassignment',
+                        'description': preassignment.description,
+                        'start_time': preassignment.start_time,
+                        'end_time': preassignment.end_time
+                    })
+            assignments[aircraft.aircraft_registration].sort(key=lambda x: x['start_time'])
         return assignments
     else:
         return None
