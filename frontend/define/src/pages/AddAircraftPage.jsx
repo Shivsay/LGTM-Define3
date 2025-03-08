@@ -18,7 +18,7 @@ const AddAircraftPage = ({ addAircraftSubmit }) => {
       seating_capacity: seatingcapacity
     };
 
-    addAirlineSubmit(newAircraft);
+    addAircraftSubmit(newAircraft);
 
     // toast.success('Aircraft Added Successfully');
 
