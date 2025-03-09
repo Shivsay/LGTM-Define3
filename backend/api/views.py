@@ -149,11 +149,11 @@ def aircraft_list(request):
     aircrafts = Aircraft.objects.all()
     serializer = AircraftSerializer(aircrafts, many=True)
     print(serializer.data)
-    #return Response(serializer.data)
+    return Response(serializer.data)
 
 def flight_list(request):
     flights = Flight.objects.all()
     serializer = FlightSerializer(flights, many=True)
     print(serializer.data)
-    #return Response(serializer.data) 
+    return Response(serializer.data) 
 
