@@ -4,7 +4,6 @@ import django
 from faker import Faker
 import random
 import datetime
-import json
 
 # Add the backend directory to the Python path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
@@ -33,70 +32,65 @@ def create_aircraft(n):
             seating_capacity=seating_capacity
         )
 
-def create_flights_and_preassignments(n_flights, n_preassignments):
+def create_flights(n):
     aircrafts = list(Aircraft.objects.all())
-    data = []
-    
     for aircraft in aircrafts:
-        current_time = datetime.datetime(2025, 3, 9, tzinfo=django.utils.timezone.get_current_timezone())
-        schedule = []
-        
-        for _ in range(n_flights):
-            departure_time = current_time
+        previous_arrival_station = None
+        for _ in range(n // len(aircrafts)):
+            departure_time = fake.date_time_between_dates(
+                datetime_start=datetime.datetime(2025, 3, 9),
+                datetime_end=datetime.datetime(2025, 3, 10),
+                tzinfo=django.utils.timezone.get_current_timezone()
+            )
             arrival_time = departure_time + datetime.timedelta(hours=random.randint(4, 24))
             
-            flight = Flight.objects.create(
-                flight_identifier=fake.unique.bothify(text='FL###'),
+            aircraft_type = aircraft.aircraft_type
+            max_seating_capacity = aircraft.seating_capacity
+            
+            if previous_arrival_station:
+                departure_station = previous_arrival_station
+            else:
+                departure_station = fake.random_element(elements=('LHR', 'JFK', 'CDG', 'FRA'))
+            
+            arrival_station = fake.random_element(elements=('LHR', 'JFK', 'CDG', 'FRA'))
+            
+            # Ensure departure and arrival stations are different
+            while arrival_station == departure_station:
+                arrival_station = fake.random_element(elements=('LHR', 'JFK', 'CDG', 'FRA'))
+            
+            Flight.objects.create(
+                flight_identifier=fake.unique.bothify(text='XX###'),
                 flight_date=departure_time.date(),
-                departure_station=fake.random_element(elements=('LHR', 'JFK', 'CDG', 'FRA')),
+                departure_station=departure_station,
                 scheduled_time_of_departure=departure_time,
-                arrival_station=fake.random_element(elements=('LHR', 'JFK', 'CDG', 'FRA')),
+                arrival_station=arrival_station,
                 scheduled_time_of_arrival=arrival_time,
-                aircraft_type=aircraft.aircraft_type,
-                physical_seating_capacity=aircraft.seating_capacity,
+                aircraft_type=aircraft_type,
+                physical_seating_capacity=random.randint(100, max_seating_capacity),
                 minimum_ground_time=random.randint(30, 120)
             )
             
-            schedule.append({
-                "type": "flight",
-                "flight_identifier": flight.flight_identifier,
-                "start_time": departure_time.isoformat(),
-                "end_time": arrival_time.isoformat(),
-                "departure_station": flight.departure_station,
-                "arrival_station": flight.arrival_station
-            })
+            previous_arrival_station = arrival_station
+
+def create_preassignments(n):
+    aircrafts = list(Aircraft.objects.all())
+    for _ in range(n):
+        if random.random() > 0.5:  # 50% chance to create a preassignment
+            start_time = fake.date_time_between_dates(
+                datetime_start=datetime.datetime(2025, 3, 9),
+                datetime_end=datetime.datetime(2025, 3, 10),
+                tzinfo=django.utils.timezone.get_current_timezone()
+            )
+            end_time = start_time + datetime.timedelta(hours=random.randint(1, 2))
             
-            current_time = arrival_time + datetime.timedelta(minutes=random.randint(30, 120))
-        
-        for _ in range(n_preassignments):
-            if random.random() > 0.5:  # 50% chance to create a preassignment
-                start_time = current_time
-                end_time = start_time + datetime.timedelta(hours=random.randint(1, 2))
-                
-                preassignment = PreAssignment.objects.create(
-                    aircraft=aircraft,
-                    start_time=start_time,
-                    end_time=end_time,
-                    description=fake.sentence()
-                )
-                
-                schedule.append({
-                    "type": "preassignment",
-                    "description": preassignment.description,
-                    "start_time": start_time.isoformat(),
-                    "end_time": end_time.isoformat()
-                })
-                
-                current_time = end_time + datetime.timedelta(minutes=random.randint(30, 120))
-        
-        data.append({
-            "aircraft": aircraft.aircraft_registration,
-            "schedule": schedule
-        })
-    
-    with open('output.json', 'w') as f:
-        json.dump(data, f, indent=4)
+            PreAssignment.objects.create(
+                aircraft=random.choice(aircrafts),
+                start_time=start_time,
+                end_time=end_time,
+                description=fake.sentence()
+            )
 
 if __name__ == '__main__':
     create_aircraft(10)
-    create_flights_and_preassignments(5, 3)
+    create_flights(50)
+    create_preassignments(10)
