@@ -60,12 +60,34 @@ Our solution leverages advanced algorithms to tackle the tail assignment problem
 - python
 
 ### Installation 
+
+## Frontend
+```bash
+cd frontend/define/
+
+npm install
+```
+
+## Backend
 ```bash
 
 ```
 
 ### Running the Project
+
+## Frontend
 ```bash
+cd frontend/define
+
+npm run dev
+```
+
+## Backend
+
+```bash
+cd backend/
+
+python manage.py runserver
 
 ```
 
