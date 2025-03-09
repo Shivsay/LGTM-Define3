@@ -32,14 +32,27 @@ Our solution leverages advanced algorithms to tackle the tail assignment problem
 ## Technical Implementation
 
 ### Technologies Used
-- **Frontend**: [React, Tailwind, ShadCDN]
-- **Backend**: [Django, OR-Tools]
+- **Frontend**: [React, Tailwind, ShadCDN, Vite]
+- **Backend**: [Django, OR-Tools, Django REST framework]
 - **Database**: [SQLite]
+- **Version Control**: [GitHub]
+- **Testing**: [Jest, React Testing Library]
 
 ### Key Features
-- 
+- Optimized tail assignment for flights
+- Real-time flight schedule updates
+- User-friendly interface for managing aircraft and flights
+- Integration with existing airline systems
+- Detailed reporting and analytics
+- Scalable architecture for handling large datasets
+- Secure and reliable backend services
+- Support for multiple aircraft types and configurations
+- Customizable constraints and preferences for scheduling
+- Advanced algorithms for efficient resource utilization
+ 
 
 ## Setup Instructions
+
 
 ### Prerequisites
 - node.js

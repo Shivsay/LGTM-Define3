@@ -34,12 +34,16 @@ def create_aircraft(n):
 
 def create_flights(n):
     aircrafts = list(Aircraft.objects.all())
+    all_flights = []  # Store created flights to create onward relationships later
+    
     for aircraft in aircrafts:
         previous_arrival_station = None
+        flight_sequence = []  # Store flights for this aircraft to create trip sequences
+        
         for _ in range(n // len(aircrafts)):
             departure_time = fake.date_time_between_dates(
                 datetime_start=datetime.datetime(2025, 3, 9),
-                datetime_end=datetime.datetime(2025, 3, 10),
+                datetime_end=datetime.datetime(2025, 3, 15),
                 tzinfo=django.utils.timezone.get_current_timezone()
             )
             arrival_time = departure_time + datetime.timedelta(hours=random.randint(4, 24))
@@ -58,7 +62,7 @@ def create_flights(n):
             while arrival_station == departure_station:
                 arrival_station = fake.random_element(elements=('LHR', 'JFK', 'CDG', 'FRA'))
             
-            Flight.objects.create(
+            flight = Flight.objects.create(
                 flight_identifier=fake.unique.bothify(text='XX###'),
                 flight_date=departure_time.date(),
                 departure_station=departure_station,
@@ -67,10 +71,18 @@ def create_flights(n):
                 scheduled_time_of_arrival=arrival_time,
                 aircraft_type=aircraft_type,
                 physical_seating_capacity=random.randint(100, max_seating_capacity),
-                minimum_ground_time=random.randint(30, 120)
+                minimum_ground_time=random.randint(30, 120),
+                onward_flight=None  # Will update this later
             )
             
+            flight_sequence.append(flight)
+            all_flights.append(flight)
             previous_arrival_station = arrival_station
+        
+        # Create onward flight relationships within the sequence
+        for i in range(len(flight_sequence) - 1):
+            flight_sequence[i].onward_flight = flight_sequence[i + 1]
+            flight_sequence[i].save()
 
 def create_preassignments(n):
     aircrafts = list(Aircraft.objects.all())
@@ -78,19 +90,31 @@ def create_preassignments(n):
         if random.random() > 0.5:  # 50% chance to create a preassignment
             start_time = fake.date_time_between_dates(
                 datetime_start=datetime.datetime(2025, 3, 9),
-                datetime_end=datetime.datetime(2025, 3, 10),
+                datetime_end=datetime.datetime(2025, 3, 15),
                 tzinfo=django.utils.timezone.get_current_timezone()
             )
-            end_time = start_time + datetime.timedelta(hours=random.randint(1, 2))
+            end_time = start_time + datetime.timedelta(hours=random.randint(1, 48))  # Longer preassignments for maintenance
+            
+            activity_type = random.choice(['Maintenance', 'Cleaning', 'Inspection', 'Training'])
             
             PreAssignment.objects.create(
                 aircraft=random.choice(aircrafts),
                 start_time=start_time,
                 end_time=end_time,
-                description=fake.sentence()
+                description=activity_type
             )
 
 if __name__ == '__main__':
-    create_aircraft(10)
+    # Clear existing data (optional)
+    print("Clearing existing data...")
+    Aircraft.objects.all().delete()
+    Flight.objects.all().delete()
+    PreAssignment.objects.all().delete()
+    
+    print("Creating aircraft...")
+    create_aircraft(20)
+    print("Creating flights...")
     create_flights(50)
+    print("Creating preassignments...")
     create_preassignments(10)
+    print("Data generation complete!")

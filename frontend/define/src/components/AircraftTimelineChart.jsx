@@ -44,33 +44,37 @@ const AircraftTimelineChart = () => {
     const flightColor = '#4285F4'; // Blue for flights
     const preassignmentColor = '#9E9E9E'; // Gray for preassignments
 
-    // Process each aircraft and its schedule
-    apiData.assignments.forEach((assignment) => {
-      const aircraft = assignment.aircraft;
-      
-      assignment.schedule.forEach((item) => {
-        const startTime = new Date(item.start_time);
-        const endTime = new Date(item.end_time);
-        
-        let label = '';
-        let color = preassignmentColor;
-        
-        if (item.type === 'flight') {
-          label = `${item.flight_identifier}: ${item.departure_station} → ${item.arrival_station}`;
-          color = flightColor;
-        } else if (item.type === 'preassignment') {
-          label = item.description;
-        }
-        
-        chartData.push([
-          aircraft,
-          label,
-          color,
-          startTime,
-          endTime,
-        ]);
+    // Find the assignment with aircraft "assignments"
+    const schedulesAssignment = apiData.assignments.find(a => a.aircraft === 'assignments');
+    
+    if (schedulesAssignment && schedulesAssignment.schedule) {
+      // Iterate through each aircraft in the schedule
+      Object.entries(schedulesAssignment.schedule).forEach(([aircraftId, scheduleItems]) => {
+        // Process each schedule item for this aircraft
+        scheduleItems.forEach((item) => {
+          const startTime = new Date(item.start_time);
+          const endTime = new Date(item.end_time);
+          
+          let label = '';
+          let color = preassignmentColor;
+          
+          if (item.type === 'flight') {
+            label = `${item.flight_identifier}: ${item.departure_station} → ${item.arrival_station}`;
+            color = flightColor;
+          } else if (item.type === 'preassignment') {
+            label = item.description;
+          }
+          
+          chartData.push([
+            aircraftId,
+            label,
+            color,
+            startTime,
+            endTime,
+          ]);
+        });
       });
-    });
+    }
 
     setData(chartData);
   };

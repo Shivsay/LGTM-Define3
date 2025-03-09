@@ -19,39 +19,51 @@ DB_PATH = './db.sqlite3'
 SCHEDULE_PATH = './api/schedule.json'
 TIMESTAMP_PATH = './api/db_timestamp.txt'
 
+# Update the solve_assignment function to include parameters from the request
+
 @csrf_exempt
 def solve_assignment(request):
-    # current_timestamp = get_db_last_modified_time(DB_PATH)
-    # print(current_timestamp)
-    # # Check if the timestamp file exists
-    # if os.path.exists(TIMESTAMP_PATH):
-    #     with open(TIMESTAMP_PATH, 'r') as timestamp_file:
-    #         previous_timestamp = float(timestamp_file.read().strip())
-    # else:
-    #     previous_timestamp = None
-    # print(previous_timestamp)
-    # # Check if the database has changed
-    # if previous_timestamp == current_timestamp:
-    #     # Check if the schedule file exists
-    #     if os.path.exists(SCHEDULE_PATH):
-    #         with open(SCHEDULE_PATH, 'r') as schedule_file:
-    #             schedule = json.load(schedule_file)
-    #         return JsonResponse({'status': 'success', 'assignments': schedule})
-    # print("Solving")
-    # Run the solver
-    assignments = solve_tail_assignment()
-    print(type(assignments))
+    # Parse parameters from the request
+    data = json.loads(request.body) if request.body else {}
+    
+    # Extract parameters with defaults
+    aircraft_subtype = data.get('aircraft_subtype')
+    start_date_str = data.get('start_date')
+    end_date_str = data.get('end_date')
+    respect_preassignments = data.get('respect_preassignments', True)
+    excluded_aircraft = data.get('excluded_aircraft', [])
+    maintain_trips = data.get('maintain_trips', True)
+    
+    # Convert date strings to date objects if provided
+    start_date = None
+    end_date = None
+    if start_date_str:
+        try:
+            start_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d').date()
+        except ValueError:
+            return JsonResponse({'status': 'error', 'message': 'Invalid start_date format'}, status=400)
+    
+    if end_date_str:
+        try:
+            end_date = datetime.datetime.strptime(end_date_str, '%Y-%m-%d').date()
+        except ValueError:
+            return JsonResponse({'status': 'error', 'message': 'Invalid end_date format'}, status=400)
+    
+    # Call the solver with the parameters
+    assignments = solve_tail_assignment(
+        aircraft_subtype=aircraft_subtype,
+        start_date=start_date,
+        end_date=end_date,
+        respect_preassignments=respect_preassignments,
+        excluded_aircraft=excluded_aircraft,
+        maintain_trips=maintain_trips
+    )
+    
     if assignments is None:
         return JsonResponse({'status': 'error', 'message': 'No solution found'}, status=400)
     
     result = [{'aircraft': aircraft, 'schedule': schedule} for aircraft, schedule in assignments.items()]
-
-    # Save the new timestamp and schedule
-    # with open(TIMESTAMP_PATH, 'w') as timestamp_file:
-    #     timestamp_file.write(str(current_timestamp))
-    # with open(SCHEDULE_PATH, 'w') as schedule_file:
-    #     json.dump(result, schedule_file)
-    print(result)
+    
     return JsonResponse({'status': 'success', 'assignments': result})
 
 def example_view(request):
