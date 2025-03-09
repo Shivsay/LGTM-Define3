@@ -69,7 +69,7 @@ const FlightGanttChart = () => {
     const fetchTailAssignments = async () => {
       setLoading(true);
       try {
-        const response = await fetch("http://127.0.0.1:8000/api/solver");
+        const response = await fetch("http://127.0.0.1:8000/api/solve");
         
         if (!response.ok) {
           throw new Error(`Failed to fetch data: ${response.status}`);
