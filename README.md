@@ -24,7 +24,7 @@ The tail assignment problem involves assigning flight schedules to individual ai
 Our solution leverages advanced algorithms to tackle the tail assignment problem in airlines. By optimizing aircraft assignments to flight schedules, we ensure efficient utilization of resources, reducing operational costs. The software considers various constraints such as aircraft type, seating capacity, and maintenance schedules to generate an optimal flight schedule. This results in improved efficiency and cost savings for airlines.
 
 ### Demo
-[![Project Demo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
+[![Project Demo](https://i9.ytimg.com/vi/PFVZS7jzA84/mqdefault.jpg?sqp=COTjtL4G-oaymwEmCMACELQB8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGFIgWyhlMA8=&rs=AOn4CLBfNHqtTnQ7sKQ1bwa-Sz36uiVAiA)](https://youtu.be/PFVZS7jzA84)
 
 ### Live Project
 [Github-Aero](https://github.com/Shivsay/LGTM-Define3)
@@ -70,7 +70,9 @@ npm install
 
 ## Backend
 ```bash
+cd backend/
 
+pip install -r requirement.txt
 ```
 
 ### Running the Project
@@ -100,16 +102,20 @@ python manage.py runserver
 ### Challenges Faced
 - API connection issues
 - Insufficient physical hardware capabilities to train the data
+- Time constraints for implementing advanced features
+
 
 ### Future Enhancements
 - Switching to highly concurrent and more developed RDBMS systems like POSTGRESQL
-- Utilizing additional RL models to implement additional predictive forecasting of pre-assignments
-
+- Utilize RL in rl_model for enhanced prediction and forecasting capabilities
+- Implementing a more advanced algorithm for tail assignment
+- Integration with external systems for real-time data updates
+- Support for additional constraints and preferences in scheduling
 ---
 
 ### Submission Checklist
 - [x] Completed all sections of this README
-- [ ] Added project demo video
+- [x] Added project demo video
 - [ ] Provided live project link
 - [x] Ensured all team members are listed
 - [x] Included setup instructions

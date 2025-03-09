@@ -1,3 +1,7 @@
+# Database Synthesis Script
+# This script generates fake data for the Aircraft, Flight, and PreAssignment models in the database.
+# The script creates 20 aircraft, 50 flights, and 10 preassignments.
+
 import os
 import sys
 import django
