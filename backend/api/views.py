@@ -1,14 +1,16 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
-from .models import Aircraft
-from .models import Flight
+from .models import Aircraft, Flight
 from .solver import solve_tail_assignment
 from .utils import get_db_last_modified_time
 import json
 import os
+from django.db import connection
 
 from rest_framework.views import APIView
+from rest_framework import status
 from rest_framework.response import Response
+
 from .serializers import AircraftSerializer, FlightSerializer
 
 from django.views.decorators.csrf import csrf_exempt
@@ -147,12 +149,26 @@ def flight_post(request):
 def aircraft_list(request):
     aircrafts = Aircraft.objects.all()
     serializer = AircraftSerializer(aircrafts, many=True)
-    print(serializer.data)
-    return Response(serializer.data)
+    #print(serializer.data)
+    return JsonResponse(serializer.data, safe=False)
+
+
 
 def flight_list(request):
     flights = Flight.objects.all()
     serializer = FlightSerializer(flights, many=True)
     print(serializer.data)
-    return Response(serializer.data) 
+    return JsonResponse(serializer.data, safe=False)
 
+
+def del_all_aircraft():
+    with connection.cursor() as cursor:
+        cursor.execute("DELETE FROM api_aircraft")
+    
+
+def del_all_flight():
+    Flight.objects.all().delete()
+    
+def del_all(request):
+    Aircraft.objects.all().delete()
+    #del_all_aircraft()
