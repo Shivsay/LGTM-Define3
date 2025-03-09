@@ -1,67 +1,86 @@
 from ortools.linear_solver import pywraplp
 from .models import Aircraft, Flight, PreAssignment
 import datetime
+import logging
 
 def solve_tail_assignment():
-    # Create the solver
-    solver = pywraplp.Solver.CreateSolver('SCIP')
-    if not solver:
-        return None
+    try:
+        print("Creating the solver...")
+        # Create the solver
+        solver = pywraplp.Solver.CreateSolver('SCIP')
+        if not solver:
+            print("Solver not created.")
+            return None
 
-    # Fetch data from the database
-    aircrafts = list(Aircraft.objects.all())
-    flights = list(Flight.objects.all())
-    preassignments = list(PreAssignment.objects.all())
+        print("Fetching data from the database...")
+        # Fetch data from the database
+        aircrafts = list(Aircraft.objects.all())
+        flights = list(Flight.objects.all())
+        preassignments = list(PreAssignment.objects.all())
 
-    # Create variables
-    x = {}
-    for flight in flights:
-        for aircraft in aircrafts:
-            x[(flight.id, aircraft.id)] = solver.BoolVar(f'x_{flight.id}_{aircraft.id}')
-
-    # Create constraints
-    for flight in flights:
-        solver.Add(sum(x[(flight.id, aircraft.id)] for aircraft in aircrafts) == 1)
-
-    for aircraft in aircrafts:
+        print("Creating variables...")
+        # Create variables
+        x = {}
         for flight in flights:
-            if flight.aircraft_type != aircraft.aircraft_type or flight.physical_seating_capacity > aircraft.seating_capacity:
-                solver.Add(x[(flight.id, aircraft.id)] == 0)
+            for aircraft in aircrafts:
+                x[(flight.flight_identifier, aircraft.aircraft_registration)] = solver.BoolVar(f'x_{flight.flight_identifier}_{aircraft.aircraft_registration}')
 
-    for preassignment in preassignments:
+        print("Creating constraints for flights...")
+        # Create constraints
         for flight in flights:
-            if flight.scheduled_time_of_departure < preassignment.end_time and flight.scheduled_time_of_arrival > preassignment.start_time:
-                solver.Add(x[(flight.id, preassignment.aircraft.id)] == 0)
+            solver.Add(sum(x[(flight.flight_identifier, aircraft.aircraft_registration)] for aircraft in aircrafts) == 1)
 
-    # Objective function
-    solver.Minimize(solver.Sum(x[(flight.id, aircraft.id)] for flight in flights for aircraft in aircrafts))
-
-    # Solve the problem
-    status = solver.Solve()
-
-    if status == pywraplp.Solver.OPTIMAL:
-        assignments = {}
+        print("Creating constraints for aircrafts...")
         for aircraft in aircrafts:
-            assignments[aircraft.aircraft_registration] = []
             for flight in flights:
-                if x[(flight.id, aircraft.id)].solution_value() == 1:
-                    assignments[aircraft.aircraft_registration].append({
-                        'type': 'flight',
-                        'flight_identifier': flight.flight_identifier,
-                        'start_time': flight.scheduled_time_of_departure,
-                        'end_time': flight.scheduled_time_of_arrival,
-                        'departure_station': flight.departure_station,
-                        'arrival_station': flight.arrival_station
-                    })
-            for preassignment in preassignments:
-                if preassignment.aircraft == aircraft:
-                    assignments[aircraft.aircraft_registration].append({
-                        'type': 'preassignment',
-                        'description': preassignment.description,
-                        'start_time': preassignment.start_time,
-                        'end_time': preassignment.end_time
-                    })
-            assignments[aircraft.aircraft_registration].sort(key=lambda x: x['start_time'])
-        return assignments
-    else:
+                if flight.aircraft_type != aircraft.aircraft_type or flight.physical_seating_capacity > aircraft.seating_capacity:
+                    solver.Add(x[(flight.flight_identifier, aircraft.aircraft_registration)] == 0)
+
+        print("Creating constraints for preassignments...")
+        for preassignment in preassignments:
+            for flight in flights:
+                if flight.scheduled_time_of_departure < preassignment.end_time and flight.scheduled_time_of_arrival > preassignment.start_time:
+                    solver.Add(x[(flight.flight_identifier, preassignment.aircraft.aircraft_registration)] == 0)
+
+        print("Setting the objective function...")
+        # Objective function
+        solver.Minimize(solver.Sum(x[(flight.flight_identifier, aircraft.aircraft_registration)] for flight in flights for aircraft in aircrafts))
+
+        print("Solving the problem...")
+        # Solve the problem
+        status = solver.Solve()
+
+        if status == pywraplp.Solver.OPTIMAL:
+            print("Optimal solution found.")
+            assignments = {}
+            for aircraft in aircrafts:
+                assignments[aircraft.aircraft_registration] = []
+                for flight in flights:
+                    if x[(flight.flight_identifier, aircraft.aircraft_registration)].solution_value() == 1:
+                        assignments[aircraft.aircraft_registration].append({
+                            'type': 'flight',
+                            'flight_identifier': flight.flight_identifier,
+                            'start_time': flight.scheduled_time_of_departure,
+                            'end_time': flight.scheduled_time_of_arrival,
+                            'departure_station': flight.departure_station,
+                            'arrival_station': flight.arrival_station
+                        })
+                for preassignment in preassignments:
+                    if preassignment.aircraft == aircraft:
+                        assignments[aircraft.aircraft_registration].append({
+                            'type': 'preassignment',
+                            'description': preassignment.description,
+                            'start_time': preassignment.start_time,
+                            'end_time': preassignment.end_time
+                        })
+                assignments[aircraft.aircraft_registration].sort(key=lambda x: x['start_time'])
+            return assignments
+        else:
+            print("No optimal solution found.")
+            logging.warning("Solver status: %s", status)
+            logging.warning("Number of variables: %d", solver.NumVariables())
+            logging.warning("Number of constraints: %d", solver.NumConstraints())
+            return None
+    except Exception as e:
+        logging.error("An error occurred in solve_tail_assignment: %s", e)
         return None
