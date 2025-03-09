@@ -1,5 +1,6 @@
 import React from 'react';
 import FlightGanttChart from '../components/FlightGanttChart';
+import AircraftTimelineChart from '../components/AircraftTimelineChart';
 
 const Dashboard = () => {
     return (
@@ -10,6 +11,8 @@ const Dashboard = () => {
             <div style={{ marginTop: '20px' }}>
                 <h2>Flight Schedule</h2>
                 <FlightGanttChart />
+                <h2>Timeline Chart</h2>
+                <AircraftTimelineChart />
             </div>
         </div>
     );
