@@ -7,6 +7,7 @@ import { createBrowserRouter,createRoutesFromElements } from "react-router-dom";
 import MainLayout from './layouts/MainLayout';
 import Dashboard from './pages/Dashboard';
 import AircraftList from './pages/AircraftList';
+import FlightList from './pages/FlightList';
 import NotFoundPage from './components/NotFoundPage';
 import AddAircraftPage from './pages/AddAircraftPage';
 import AssignmentList from './pages/AssignmentList';
@@ -46,6 +47,7 @@ const router = createBrowserRouter(
         <Route path='/' element={<MainLayout />}> 
            <Route path='dashboard' element={<Dashboard />} />
            <Route path='/aircraftlist' element={<AircraftList />} />
+           <Route path='/flightlist' element={<FlightList />} />
            <Route path='/assignmentlist' element={<AssignmentList />} />
            <Route path='/addaircraft' element={<AddAircraftPage addAircraftSubmit={addNewAircraft}/>} />
            <Route path='/addflight' element={<AddFlightPage addFlightSubmit={addNewFlight}/>} />
