@@ -1,50 +1,56 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 const AddFlightPage = ({ addFlightSubmit }) => {
   const [flightidentifier, setFlightIdentifier] = useState('');
   const [flightdate, setFlightDate] = useState('');
   const [departurestation, setDepartureStation] = useState('');
-  const [timeofdeparture,setTimeOfDeparture] = useState('');
+  const [timeofdeparture, setTimeOfDeparture] = useState('');
   const [arrivalstation, setArrivalStation] = useState('');
   const [timeofarrival, setTimeOfArrival] = useState('');
   const [aircrafttype, setAircraftType] = useState('');
   const [seatingcapacity, setSeatingCapacity] = useState('');
   const [mingroundtime, setMinGroundTime] = useState('');
   const [onwardflightinformation, setOnwardFlightInformation] = useState('');
-
-
   const navigate = useNavigate();
-
+  
   const submitForm = (e) => {
     e.preventDefault();
-
+    
+    // Format dates and times to match Django's expected format
+    const formattedDepartureDateTime = formatDateTime(flightdate, timeofdeparture);
+    const formattedArrivalDateTime = formatDateTime(flightdate, timeofarrival);
+    
     const newFlight = {
-      flight_identifier:flightidentifier,
-      flight_date:flightdate,
-      departure_station:departurestation,
-      scheduled_time_of_departure:timeofdeparture,
-      arrival_station:arrivalstation,
-      time_of_arrival:timeofarrival,
-      aircraft_type:aircrafttype,
-      seating_capacity:seatingcapacity,
-      minimum_ground_time:mingroundtime,
-      onward_flight_information:onwardflightinformation,
+      flight_identifier: flightidentifier,
+      flight_date: flightdate, // This is already in YYYY-MM-DD format from the date input
+      departure_station: departurestation,
+      scheduled_time_of_departure: formattedDepartureDateTime,
+      arrival_station: arrivalstation,
+      scheduled_time_of_arrival: formattedArrivalDateTime,
+      aircraft_type: aircrafttype,
+      physical_seating_capacity: parseInt(seatingcapacity),
+      minimum_ground_time: parseInt(mingroundtime),
+      onward_flight: null,
     };
+  addFlightSubmit(newFlight);
+  };
+  
 
-    addAssignmentSubmit(newFlight);
+  
+const formatDateTime = (date, time) => {
+  if (!date || !time) return '';
+  // Django expects ISO format for DateTimeField
+  return `${date}T${time}:00`;
+};
 
-    // toast.success('Aircraft Added Successfully');
-
-    return navigate('/dashboard');
-  }
-
+  
   return (
-       <section className='bg-indigo-50'>
+    <section className='bg-indigo-50'>
       <div className='container m-auto max-w-2xl py-24'>
         <div className='bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0'>
           <form onSubmit={submitForm}>
             <h2 className='text-3xl text-center font-semibold mb-6'>Add Flight</h2>
-
             <div className='mb-4'>
               <label className='block text-gray-700 font-bold mb-2'>
                 Flight Identifier
@@ -61,13 +67,12 @@ const AddFlightPage = ({ addFlightSubmit }) => {
                 onChange={(e) => setFlightIdentifier(e.target.value)}
               />
             </div>
-
             <div className='mb-4'>
               <label className='block text-gray-700 font-bold mb-2'>
                 Flight Date
               </label>
               <input
-                type='text'
+                type='date'
                 id='flightdate'
                 name='flightdate'
                 className='border rounded w-full py-2 px-3 mb-2'
@@ -75,9 +80,10 @@ const AddFlightPage = ({ addFlightSubmit }) => {
                 required
                 autoComplete="off"
                 value={flightdate}
-                onChange={(e) => setFlightDate(e.target.value)}/>
-                
-            </div><div className='mb-4'>
+                onChange={(e) => setFlightDate(e.target.value)}
+              />
+            </div>
+            <div className='mb-4'>
               <label className='block text-gray-700 font-bold mb-2'>
                 Departure Station
               </label>  
@@ -94,12 +100,12 @@ const AddFlightPage = ({ addFlightSubmit }) => {
               />
             </div>
               
-             <div className='mb-4'>
+            <div className='mb-4'>
               <label className='block text-gray-700 font-bold mb-2'>
                 Time Of Departure 
               </label>
               <input
-                type='text'
+                type='time'
                 id='timeofdeparture'
                 name='timeofdeparture'
                 className='border rounded w-full py-2 px-3 mb-2'
@@ -127,13 +133,12 @@ const AddFlightPage = ({ addFlightSubmit }) => {
                 onChange={(e) => setArrivalStation(e.target.value)}
               />
             </div>
-
             <div className='mb-4'>
               <label className='block text-gray-700 font-bold mb-2'>
                 Scheduled Time Of Arrival
               </label>
               <input
-                type='text'
+                type='time'
                 id='timeofarrival'
                 name='timeofarrival' 
                 autoComplete='off'
@@ -144,8 +149,7 @@ const AddFlightPage = ({ addFlightSubmit }) => {
                 onChange={(e) => setTimeOfArrival(e.target.value)}
               />
             </div>
-
-             <div className='mb-4'>
+            <div className='mb-4'>
               <label className='block text-gray-700 font-bold mb-2'>
                 Aircraft Type
               </label>
@@ -161,7 +165,6 @@ const AddFlightPage = ({ addFlightSubmit }) => {
                 onChange={(e) => setAircraftType(e.target.value)}
               />
             </div>
-
             <div className='mb-4'>
               <label className='block text-gray-700 font-bold mb-2'>
                 Physical Seating Capacity
@@ -178,7 +181,6 @@ const AddFlightPage = ({ addFlightSubmit }) => {
                 onChange={(e) => setSeatingCapacity(e.target.value)}
               />
             </div>
-
             <div className='mb-4'>
               <label className='block text-gray-700 font-bold mb-2'>
                 Minimum Ground Time
@@ -195,21 +197,6 @@ const AddFlightPage = ({ addFlightSubmit }) => {
                 onChange={(e) => setMinGroundTime(e.target.value)}
               />
             </div>
-            {/* <div className='mb-4'>
-              <label className='block text-gray-700 font-bold mb-2'>
-                Onward Flight Information
-              </label>
-              <input
-                type='text'
-                id='onwardflightinformation'
-                name='onwardflightinformation' 
-                className='border rounded w-full py-2 px-3 mb-2'
-                placeholder=''
-                required
-                value={onwardflightinformation}
-                onChange={(e) => setFlightInformation (e.target.value)}
-              />
-            </div> */}
             <div>
               <button
                 className='bg-gray-800 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline'
@@ -217,11 +204,11 @@ const AddFlightPage = ({ addFlightSubmit }) => {
                 Add Flight
               </button>
             </div> 
-
           </form>
         </div>
       </div>
     </section>
-  )
-}
+  );
+};
+
 export default AddFlightPage;

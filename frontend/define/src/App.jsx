@@ -31,7 +31,7 @@ const addNewAircraft = async (newAircraft) => {
   };
 
   const addNewFlight = async (newFlight) => {
-    const res = await fetch('/api/put-flight', {
+    const res = await fetch('http://127.0.0.1:8000/api/put-flight/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
