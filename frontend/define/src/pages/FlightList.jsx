@@ -1,88 +1,82 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-const FlightTable = () => {
-  const [flightData, setFlightData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchFlightData = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('http://127.0.0.1:8000/api/get-flight/');
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        setFlightData(data);
-        setLoading(false);
-      } catch (err) {
-        setError(`Error fetching flight data: ${err.message}`);
-        setLoading(false);
-      }
-    };
-    fetchFlightData();
-  }, []);
-
-  // Format date and time for better display
-  const formatDateTime = (dateTimeString) => {
-    if (!dateTimeString) return '';
-    const dateTime = new Date(dateTimeString);
-    return dateTime.toLocaleString();
-  };
-
-  if (loading) {
-    return <div className="flex justify-center p-6">Loading flight data...</div>;
-  }
-
-  if (error) {
-    return <div className="text-red-600 p-4 border border-red-300 rounded bg-red-50">{error}</div>;
-  }
-
-  return (
-    <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-semibold mb-4">Flight Schedule</h2>
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-300 shadow-sm rounded-lg">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="py-2 px-4 border-b text-left">Flight ID</th>
-              <th className="py-2 px-4 border-b text-left">Date</th>
-              <th className="py-2 px-4 border-b text-left">From</th>
-              <th className="py-2 px-4 border-b text-left">To</th>
-              <th className="py-2 px-4 border-b text-left">Departure</th>
-              <th className="py-2 px-4 border-b text-left">Arrival</th>
-              <th className="py-2 px-4 border-b text-left">Aircraft</th>
-              <th className="py-2 px-4 border-b text-right">Capacity</th>
+const FlightList = ({ flights }) => {
+    return (
+       <div className="relative overflow-x-auto">
+    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" className="px-6 py-3">
+                   Flight Identifier
+                </th>
+                <th scope="col" className="px-6 py-3">
+                   Flight Date
+                </th>
+                <th scope="col" className="px-6 py-3">
+                    Departure Station
+                </th>
+                 <th scope="col" className="px-6 py-3">
+                    Scheduled Time of Departure
+                </th>
+                 <th scope="col" className="px-6 py-3">
+                    Arrival Station
+                </th>
+                 <th scope="col" className="px-6 py-3">
+                    Scheduled Time of Arrival
+                </th>
+                 <th scope="col" className="px-6 py-3">
+                    Aircraft Type
+                </th>
+                 <th scope="col" className="px-6 py-3">
+                    Physical Seating Capacity
+                </th>
+                 <th scope="col" className="px-6 py-3">
+                    Minimum Ground Time
+                </th>
+                 <th scope="col" className="px-6 py-3">
+                    Onward Flight Information
+                </th>
             </tr>
-          </thead>
-          <tbody>
-            {flightData.map((flight, index) => (
-              <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                <td className="py-2 px-4 border-b font-medium">{flight.flight_identifier}</td>
-                <td className="py-2 px-4 border-b">{flight.flight_date}</td>
-                <td className="py-2 px-4 border-b">{flight.departure_station}</td>
-                <td className="py-2 px-4 border-b">{flight.arrival_station}</td>
-                <td className="py-2 px-4 border-b">{formatDateTime(flight.scheduled_time_of_departure)}</td>
-                <td className="py-2 px-4 border-b">{formatDateTime(flight.scheduled_time_of_arrival)}</td>
-                <td className="py-2 px-4 border-b">{flight.aircraft_type}</td>
-                <td className="py-2 px-4 border-b text-right">{flight.physical_seating_capacity}</td>
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr className="bg-gray-100">
-              <td className="py-2 px-4 border-t font-semibold" colSpan={7}>Total Flights</td>
-              <td className="py-2 px-4 border-t text-right font-semibold">{flightData.length}</td>
+        </thead>
+        <tbody>
+             {/* {arr.map((item, index) => (
+            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {item}
+                </th>
+                <td className="px-6 py-4">
+                   {item.aircraft_type}
+                </td>
+                <td className="px-6 py-4">
+                    {item.seating_capacity}
+                </td>
             </tr>
-          </tfoot>
-        </table>
-      </div>
-    </div>
-  );
+                ))} */}
+                       <tr className="bg-white border-b dark:bg-    gray-800 dark:border-gray-700 border-gray-200">
+                <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {item.flight_identifier}
+                </th>
+                <td className="px-6 py-4">
+                   {item.flight_date}
+                </td>
+                <td className="px-6 py-4">
+                    {item.departure_station}
+                </td>
+                <td className="px-6 py-4">
+                    {item.scheduled_time_of_departure}
+                </td>
+                <td className="px-6 py-4">
+                    {item.aircraft_type}
+                </td>
+                <td className='px-6 py-4'>
+                    {item.seating_capacity}
+                    </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+    );
 };
 
-export default FlightTable;
-
+export default FlightList;

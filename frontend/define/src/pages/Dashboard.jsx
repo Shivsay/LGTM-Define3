@@ -3,7 +3,7 @@ import FlightGanttChart from '../components/FlightGanttChart';
 
 const Dashboard = () => {
     return (
-        <div>
+        <div className='bg-gray-800'>
             <h1>Dashboard</h1>
             <p>Overview of current assignments and key metrics.</p>
             
