@@ -1,6 +1,5 @@
 from ortools.linear_solver import pywraplp
 from .models import Aircraft, Flight, PreAssignment
-import datetime
 import logging
 
 def solve_tail_assignment():
@@ -42,11 +41,24 @@ def solve_tail_assignment():
                 if flight.scheduled_time_of_departure < preassignment.end_time and flight.scheduled_time_of_arrival > preassignment.start_time:
                     solver.Add(x[(flight.flight_identifier, preassignment.aircraft.aircraft_registration)] == 0)
 
+        print("Creating location continuity constraints...")
+        # for aircraft in aircrafts:
+        #     for i in range(len(flights)):
+        #         for j in range(len(flights)):
+        #             if i != j:
+        #                 flight_i = flights[i]
+        #                 flight_j = flights[j]
+        #                 solver.Add(x[(flight_i.flight_identifier, aircraft.aircraft_registration)] + x[(flight_j.flight_identifier, aircraft.aircraft_registration)] <= 1 or
+        #                            flight_i.arrival_station == flight_j.departure_station)
+
         print("Setting the objective function...")
         # Objective function
         solver.Minimize(solver.Sum(x[(flight.flight_identifier, aircraft.aircraft_registration)] for flight in flights for aircraft in aircrafts))
 
         print("Solving the problem...")
+        # Set a time limit for the solver
+        solver.set_time_limit(60000)  # 60 seconds
+
         # Solve the problem
         status = solver.Solve()
 
